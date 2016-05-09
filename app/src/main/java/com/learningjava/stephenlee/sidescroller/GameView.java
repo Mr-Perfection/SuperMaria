@@ -41,9 +41,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
-        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-
-        player = new Player(playerBitmap, getWidth(), getHeight()); //Set player constructor
+        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
+        Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
+        player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
 
         gameThread = new GameThread(this);  //Set game thread constructor
         gameThread.start();
@@ -87,7 +87,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         c.drawColor(Color.rgb(135,206,250));
 
         if(player.getVisibility())
+        {
             player.draw(c);
+            player.gravity();
+        }
 
 
     }

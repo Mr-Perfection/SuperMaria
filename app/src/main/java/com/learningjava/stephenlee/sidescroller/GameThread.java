@@ -46,7 +46,7 @@ public class GameThread extends Thread {
 // Set the frame rate by setting this delay
             try {
 
-                Thread.sleep(1);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
 // Thread was interrupted while sleeping.
 //                System.out.println("b4return");
