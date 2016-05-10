@@ -38,9 +38,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int x1, x2, y1, y2 = 0;
     Rect bk = new Rect();
 
-    //enemy
-    private Bitmap enemybitmap;
-    private Objects enemy;
+    /**Objects**/
+
+    //mushroom
+    private Bitmap mushroombitmap;
+    private Objects mushroom;
 
     public GameView(Context context)
     {
@@ -62,21 +64,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
         Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
         player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
-
         //Set score
         scoreX =100;
         scoreY = getHeight()/11;
-
-        gameThread = new GameThread(this);  //Set game thread constructor
-        gameThread.start();
-
         //initialize the background
         background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
         x2 = background.getWidth() * getHeight() / background.getHeight();
         y2 = getHeight();
+        //initialize mushroom
+        mushroombitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
+        int mushroom_left = background.getWidth()*1/2;
+        int mushroom_bot = getWidth()*7/9;
+        mushroom = new Objects(mushroombitmap,mushroom_left,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth(),mushroom_bot);
 
-        //initialize enemy
-        enemybitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
+        //Start the thread
+        gameThread = new GameThread(this);  //Set game thread constructor
+        gameThread.start();
     }
 
     @Override
@@ -110,13 +113,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     public void draw(Canvas c) {
-
-        int i, j;
         //Set rect background to...
         bk.set(x1, y1, x2, y2);
 
         c.drawBitmap(background, null, bk, null);
-        if(player.getX() > getWidth()*4/7){
+        if(player.getX() > getWidth()*4/7)
+        {
 
             x2 -= 30;
             x1 -= 30;
@@ -126,30 +128,29 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 //            System.out.println(x1+"x1 x2 "+x2);
         }
-        else if(player.getX() < getWidth() *2/7){
-
+        else if(player.getX() < getWidth() *2/7)
+        {
             x2 += 30;
             x1 += 30;
-            xpos--; //going against the travel distance. Subtra
+            xpos--; //going against the travel distance. Subtract xpos
 
         }
 
-//        System.out.println("xPos: " + xpos);
 
         //DRAW the score
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(100);
-        paint.setStyle(Paint.Style.FILL);
-        String s = Integer.toString(score);
-        c.drawText(s, scoreX, scoreY, paint);
+        scoreBoard(c,scoreX,scoreY,score);
 
+        //Set the mushroom movement
+        mushroom.setMoveX(30);
         //setting goomba somewhere on the rolling background
-        if( x1 <= -300 && x1 >= -300-getWidth()){
-            enemy = new Objects(enemybitmap,x1+(enemybitmap.getWidth()*3), getHeight()*2/3, x1+(enemybitmap.getWidth()*32/10), 300+enemybitmap.getHeight());
-            enemy.drawObject(c);
-            System.out.println("draw enemy");
-        }
+        if(mushroom.getX() > 0)
+            mushroom.drawObject(c);
+//        System.out.println("draw mushroom");
+//        if( x1 <= -300 && x1 >= -300-getWidth()){
+//
+//            mushroom.drawObject(c);
+//            System.out.println("draw mushroom");
+//        }
         if(player.getVisibility())
         {
             player.draw(c);
@@ -159,6 +160,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
 
+    private static void scoreBoard(Canvas c, int scoreX, int scoreY, int score)
+    {
+        //DRAW the score
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(100);
+        paint.setStyle(Paint.Style.FILL);
+        String s = Integer.toString(score);
+        c.drawText(s, scoreX, scoreY, paint);
+    }
 
 
 

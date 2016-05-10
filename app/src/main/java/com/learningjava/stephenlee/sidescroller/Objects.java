@@ -32,7 +32,7 @@ public class Objects {
         this.centerX = xi + (xf - xi) / 2;      //used for checking if collision of player and objects
         this.centerY = yi + (yf - yi) / 2;      //used for checking if collision of player and objects
         dst = new Rect(xi,yi,xf,yf);
-
+//        System.out.println(dst);
         bitmap = _bitmap;
     }
     //move the objects by subtracting the x cooridinates
@@ -47,6 +47,7 @@ public class Objects {
         this.centerX -= move;
         dst.set(xi,yi,xf,yf);
     }
+    public int getX(){return xi;}
 
     /***
      *Collision detection function
@@ -59,7 +60,11 @@ public class Objects {
         return false;
     }
 
-    public void drawObject(Canvas c) {      //drawing the  objects
+    public void drawObject(Canvas c)
+    {
+    //drawing the  objects
+
         c.drawBitmap(bitmap, null, dst, null);
+        System.out.println(dst);
     }
 }
