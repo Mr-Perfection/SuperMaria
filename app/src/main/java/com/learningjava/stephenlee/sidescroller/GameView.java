@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,6 +26,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /***MAP settings****/
     float gravity = 0f;
 
+    //background
+    private Bitmap background;
+    private int x1, x2, y1, y2 = 0;
 
     public GameView(Context context)
     {
@@ -47,6 +52,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         gameThread = new GameThread(this);  //Set game thread constructor
         gameThread.start();
+
+        //initialize the background
+        background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
+        x2 = background.getWidth() * getHeight() / background.getHeight();
+        y2 = getHeight();
 
 
     }
@@ -84,8 +94,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas c) {
 
         int i, j;
-        c.drawColor(Color.rgb(135,206,250));
+//        c.drawColor(Color.rgb(135,206,250));
+        Paint paint = new Paint();
+        Rect bk = new Rect(x1, y1, x2, y2);
+        c.drawBitmap(background, null, bk, paint);
+        if(player.getX() > getWidth()*4/7){
 
+            x2 -= 30;
+            x1 -= 30;
+//            System.out.println(x1+"x1 x2 "+x2);
+        }
+        if(player.getX() < getWidth() *2/7){
+
+            x2 += 30;
+            x1 += 30;
+//            System.out.println(x1+"x1 x2"+x2);
+        }
         if(player.getVisibility())
         {
             player.draw(c);
