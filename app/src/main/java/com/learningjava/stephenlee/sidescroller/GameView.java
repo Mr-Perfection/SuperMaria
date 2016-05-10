@@ -27,10 +27,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     float gravity = 0f;
 
     //Score
-    private int prevx=0; //this will check whether distance x has been incremented or not.
-    private int score=0;
+    private int score;
+    private int xpos=0; //this will check whether player is moving to the right.
     private int scoreX = 0;
     private int scoreY = 0;
+
+
     //background
     private Bitmap background; //THIS IS FULL SIZED BACKGROUND
     private int x1, x2, y1, y2 = 0;
@@ -120,27 +122,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             x2 -= 30;
             x1 -= 30;
+            xpos++;
+            if(xpos>0)  //If and only if the traveled distance is positive
+                score++; //increments score
+
 //            System.out.println(x1+"x1 x2 "+x2);
         }
         else if(player.getX() < getWidth() *2/7){
 
             x2 += 30;
             x1 += 30;
-            prevx = x1;
-        }
-
-        if(x1==prevx)
-        {
-            Paint paint = new Paint();
-
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(100);
-            paint.setStyle(Paint.Style.FILL);
-
-            c.drawText("hi", 100, getHeight()/11, paint);
-            System.out.println("TEXT IS WRITTEN");
+            xpos--; //going against the travel distance. Subtra
 
         }
+
+//        System.out.println("xPos: " + xpos);
+
+
+
+
+        //DRAW the score
+
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(100);
+        paint.setStyle(Paint.Style.FILL);
+        String s = Integer.toString(score);
+        c.drawText(s, scoreX, scoreY, paint);
+
         //setting goomba somewhere on the rolling background
         if( x1 <= -300 && x1 >= -300-getWidth()){
             enemy = new Objects(enemybitmap,x1+(enemybitmap.getWidth()*3), getHeight()*2/3, x1+(enemybitmap.getWidth()*32/10), 300+enemybitmap.getHeight());
@@ -155,7 +164,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
 
-    }
+
+    } //EOF draw
+
 
 
 
