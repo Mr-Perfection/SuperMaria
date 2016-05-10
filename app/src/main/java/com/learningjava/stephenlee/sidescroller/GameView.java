@@ -50,6 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder)
     {
+        /*SET player bitmaps*/
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
         Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
         player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor

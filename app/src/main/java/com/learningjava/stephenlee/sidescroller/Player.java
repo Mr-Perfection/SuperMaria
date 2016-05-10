@@ -23,8 +23,8 @@ public class Player {
 
     private int x;   // the X coordinate
     private int y;   // the Y coordinate
-    private int deltaX = 25;    //movement in magnitude for x coordinate
-    private int deltaY = 25;    //movement in magnitude for x coordinate
+    private int deltaX = 35;    //movement in magnitude for x coordinate
+    private int deltaY = 210;    //movement in magnitude for x coordinate
     private boolean isFliped = false; //check if the bitmap is fliped or not.
     private boolean isVisible = true; //invisibility flag (when bullet hits the enemy, it becomes invisible)
     private boolean jumped = false; //check if jump is already executed or not.
@@ -35,9 +35,9 @@ public class Player {
         originalBitmap = bitmap;
         animatedBitmap = _animtedBitmap;
         width = _width;
-        height = _height;
+        height = _height * 7/9;
         x = _width / 2;
-        y = _height * 6/7;
+        y = height;
         body = new Rect(x,y,x+_bitmap.getWidth(), y+_bitmap.getHeight());
 
         touchGrid = new Rect(0,0,width,height);
@@ -101,7 +101,6 @@ public class Player {
 //        touched = _touched;
 //    }
 
-    public enum Direction { LEFT, RIGHT };
 
     /**
      Creates a new bitmap by flipping the specified bitmap
@@ -147,29 +146,24 @@ public class Player {
 
     public void update(int eventX, int eventY) {
 
-
-
         /**IF the left screen is touched***/
         if(eventX < width/2)
         {
+            //Only move left with this condition
+            if(x>=width/4) x-=deltaX; //MOVE to the left
 
-
-            x-=35; //MOVE to the left
-//            flipBitmap();
             if(!isFliped)
             {
                 originalBitmap = flipBitmap(originalBitmap);
                 isFliped = true;
             }
-
-
-        }
+        }   //EOF if < width/2
         /**IF the right screen is touched***/
         else if(eventX > width/2)
         {
 
 
-            x+=35; //MOVE to the right
+            if(x <= width*3/4) x+=deltaX; //MOVE to the right
             if(isFliped)
             {
                 originalBitmap = flipBitmap(originalBitmap);
@@ -185,11 +179,7 @@ public class Player {
             int i;
             if(!jumped)
             {
-                for(i=0;i<30;++i)
-                {
-                    y-=7;
-
-                }   //MOVE up
+                y-=deltaY;//MOVE up
 
                 bitmap = animatedBitmap;
 
@@ -200,6 +190,9 @@ public class Player {
 
         } //EOF if event X
 
+        /***If x out of left and right sides of screen, don't do anything***/
+//        if(x <= 0) {x+=35;}
+//        else if(x >= width) {x-=35;}
 
         bitmap = originalBitmap;    //If the player is not jumped use the orginal bitmap
 
@@ -213,14 +206,14 @@ public class Player {
         if(jumped)
         {
 
-            while (y <= height*6/7)
+            while (y <= height)
             {
 
                 y+=5;
 
             }   //Check while y <= certain height because of the gravity.
 
-            if(y >= height*6/7)
+            if(y >= height)
 
             {
                 jumped = false;
