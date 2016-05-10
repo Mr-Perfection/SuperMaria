@@ -30,6 +30,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap background;
     private int x1, x2, y1, y2 = 0;
 
+    //enemy
+    private Bitmap enemybitmap;
+    private Objects enemy;
+
     public GameView(Context context)
     {
         super(context);
@@ -57,6 +61,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
         x2 = background.getWidth() * getHeight() / background.getHeight();
         y2 = getHeight();
+
+        //initialize enemy
+        enemybitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
 
 
     }
@@ -109,6 +116,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             x2 += 30;
             x1 += 30;
 //            System.out.println(x1+"x1 x2"+x2);
+        }
+        //setting goomba somewhere on the rolling background
+        if( x1 <= -300 && x1 >= -300-getWidth()){
+            enemy = new Objects(enemybitmap,x1+(enemybitmap.getWidth()*3), getHeight()*2/3, x1+(enemybitmap.getWidth()*32/10), 300+enemybitmap.getHeight());
+            enemy.drawObject(c);
+            System.out.println("draw enemy");
+
         }
         if(player.getVisibility())
         {
