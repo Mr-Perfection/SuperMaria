@@ -26,9 +26,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /***MAP settings****/
     float gravity = 0f;
 
+    //Score
+    private int prevx=0; //this will check whether distance x has been incremented or not.
+    private int score=0;
+    private int scoreX = 0;
+    private int scoreY = 0;
     //background
-    private Bitmap background;
+    private Bitmap background; //THIS IS FULL SIZED BACKGROUND
     private int x1, x2, y1, y2 = 0;
+    Rect bk = new Rect();
 
     //enemy
     private Bitmap enemybitmap;
@@ -54,6 +60,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
         Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
         player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
+
+        //Set score
+        scoreX =100;
+        scoreY = getHeight()/11;
 
         gameThread = new GameThread(this);  //Set game thread constructor
         gameThread.start();
@@ -102,21 +112,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas c) {
 
         int i, j;
-//        c.drawColor(Color.rgb(135,206,250));
-        Paint paint = new Paint();
-        Rect bk = new Rect(x1, y1, x2, y2);
-        c.drawBitmap(background, null, bk, paint);
+        //Set rect background to...
+        bk.set(x1, y1, x2, y2);
+
+        c.drawBitmap(background, null, bk, null);
         if(player.getX() > getWidth()*4/7){
 
             x2 -= 30;
             x1 -= 30;
 //            System.out.println(x1+"x1 x2 "+x2);
         }
-        if(player.getX() < getWidth() *2/7){
+        else if(player.getX() < getWidth() *2/7){
 
             x2 += 30;
             x1 += 30;
-//            System.out.println(x1+"x1 x2"+x2);
+            prevx = x1;
+        }
+
+        if(x1==prevx)
+        {
+            Paint paint = new Paint();
+
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(100);
+            paint.setStyle(Paint.Style.FILL);
+
+            c.drawText("hi", 100, getHeight()/11, paint);
+            System.out.println("TEXT IS WRITTEN");
+
         }
         //setting goomba somewhere on the rolling background
         if( x1 <= -300 && x1 >= -300-getWidth()){
