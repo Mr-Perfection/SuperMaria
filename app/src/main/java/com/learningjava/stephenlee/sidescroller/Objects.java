@@ -49,7 +49,9 @@ public class Objects {
     }
 
     /***
-     * **/
+     *Collision detection function
+     * @param : playerRect is the rect that will be used to detect whether dst contains it or not.
+     * @return : boolean to decide whether collision has been detected or not. True or false. **/
 
     public boolean collisionDetected(Rect playerRect)
     {
