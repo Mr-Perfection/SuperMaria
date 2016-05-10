@@ -143,7 +143,6 @@ public class Player {
      * the screen, then it iwll trigger the jump.
      * For our animation, I flip the bitmap based on the isFliped flag. And if the user jumps or flies by tapping the middle of
      * the screen, then it will draw the different bitmap.***/
-
     public void update(int eventX, int eventY) {
 
         /**IF the left screen is touched***/
@@ -189,13 +188,7 @@ public class Player {
 
 
         } //EOF if event X
-
-        /***If x out of left and right sides of screen, don't do anything***/
-//        if(x <= 0) {x+=35;}
-//        else if(x >= width) {x-=35;}
-
         bitmap = originalBitmap;    //If the player is not jumped use the orginal bitmap
-
 
     }//EOF update
 
@@ -217,10 +210,7 @@ public class Player {
 
             {
                 jumped = false;
-
                 bitmap = originalBitmap;
-
-
             }
         }
 

@@ -77,8 +77,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         //initialize enemy
         enemybitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
-
-
     }
 
     @Override
@@ -138,11 +136,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 //        System.out.println("xPos: " + xpos);
 
-
-
-
         //DRAW the score
-
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(100);
@@ -155,16 +149,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             enemy = new Objects(enemybitmap,x1+(enemybitmap.getWidth()*3), getHeight()*2/3, x1+(enemybitmap.getWidth()*32/10), 300+enemybitmap.getHeight());
             enemy.drawObject(c);
             System.out.println("draw enemy");
-
         }
         if(player.getVisibility())
         {
             player.draw(c);
             player.gravity();
         }
-
-
-
     } //EOF draw
 
 
