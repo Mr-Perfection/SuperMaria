@@ -48,6 +48,14 @@ public class Objects {
         dst.set(xi,yi,xf,yf);
     }
 
+    /***
+     * **/
+
+    public boolean collisionDetected(Rect playerRect)
+    {
+        if (dst.contains(playerRect)){return true;}
+        return false;
+    }
 
     public void drawObject(Canvas c) {      //drawing the  objects
         c.drawBitmap(bitmap, null, dst, null);
