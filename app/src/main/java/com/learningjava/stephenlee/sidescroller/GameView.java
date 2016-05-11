@@ -119,14 +119,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         c.drawBitmap(background, null, bk, null);
         if(player.getX() > getWidth()*4/7)
         {
-
             x2 -= 30;
             x1 -= 30;
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
 
-//            System.out.println(x1+"x1 x2 "+x2);
         }
         else if(player.getX() < getWidth() *2/7)
         {
@@ -141,16 +139,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         scoreBoard(c,scoreX,scoreY,score);
 
         //Set the mushroom movement
-        mushroom.setMoveX(30);
+        mushroom.setMoveX(30); //Moving to the left
         //setting goomba somewhere on the rolling background
         if(mushroom.getX() > 0)
             mushroom.drawObject(c);
-//        System.out.println("draw mushroom");
-//        if( x1 <= -300 && x1 >= -300-getWidth()){
-//
-//            mushroom.drawObject(c);
-//            System.out.println("draw mushroom");
-//        }
+
+        if(mushroom.collisionDetected(player.getBody()))
+        {
+            player.setVisibility(false);
+            gameThread.interrupt();
+        }
         if(player.getVisibility())
         {
             player.draw(c);
