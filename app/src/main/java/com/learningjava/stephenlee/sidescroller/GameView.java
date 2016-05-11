@@ -38,6 +38,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int x1, x2, y1, y2 = 0;
     Rect bk = new Rect();
 
+    //Flagepole
+    private Objects flagpole;
+
     /**Objects**/
 
     //mushroom
@@ -71,6 +74,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
         x2 = background.getWidth() * getHeight() / background.getHeight();
         y2 = getHeight();
+        //Initialize the flag
+        Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
+        int flagpole_left = background.getWidth() * 9/11;
+//                background.getWidth()*9/10;
+        int flagpole_bot = getHeight()*9/11;
+        flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
+
         //initialize mushroom
         mushroombitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
         int mushroom_left = background.getWidth()/2;
@@ -123,6 +133,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
+            Log.d(Name, "flagpole moved left!");
+            flagpole.setMoveX(30);
 
         }
         else if(player.getX() < getWidth() *2/7)
@@ -130,8 +142,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             x2 += 30;
             x1 += 30;
             xpos--; //going against the travel distance. Subtract xpos
-
+            flagpole.setMoveX(-30);
         }
+
+        if(flagpole.collisionDetected(player.getX(),player.getY()))
+        {
+
+            gameThread.interrupt();
+        }
+
 
 
         //DRAW the score
@@ -154,6 +173,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             player.draw(c);
             player.gravity();
         } //EOF
+
+        flagpole.drawObject(c);
     } //EOF draw
 
 
