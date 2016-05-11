@@ -16,7 +16,7 @@ public class Player {
     private int width, height;  //Screen size
     private Rect touchGrid; /*What touch grid would do is that it will take the user touch coordinates and check whether half left side has been
                             pressed or top right side has been press**/
-    private Rect body;  //Player body object that checks whether it contains the touch location or not.
+    private Rect body;  //Check this for collision detection
     private Bitmap bitmap; // the actual bitmap
     private Bitmap originalBitmap; // the temp bitmap or original
     private Bitmap animatedBitmap; //the animated bitmap
@@ -67,12 +67,19 @@ public class Player {
     {
         bitmap = _bitmap;
     }
+
+    //get the rect body
+    public Rect getBody()
+    {
+        return body;
+    }
     //Get x axis
     public int getX() {
 
         return x;
 
     }
+
 
     //Set x axis
     public void setX(int _x) {
