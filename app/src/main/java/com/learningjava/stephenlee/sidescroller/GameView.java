@@ -73,8 +73,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         y2 = getHeight();
         //initialize mushroom
         mushroombitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
-        int mushroom_left = background.getWidth()*1/2;
-        int mushroom_bot = getWidth()*7/9;
+        int mushroom_left = background.getWidth()/2;
+        int mushroom_bot = getHeight()*9/11;
         mushroom = new Objects(mushroombitmap,mushroom_left,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth(),mushroom_bot);
 
         //Start the thread
@@ -105,7 +105,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     {
         int touchX = (int)event.getX();
         int touchY = (int)event.getX();
-
         player.update(touchX, touchY);
         return true;
     }
@@ -144,7 +143,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(mushroom.getX() > 0)
             mushroom.drawObject(c);
 
-        if(mushroom.collisionDetected(player.getBody()))
+        //Check whether mushroom has been collided with player
+        if(mushroom.collisionDetected(player.getX(), player.getY()))
         {
             player.setVisibility(false);
             gameThread.interrupt();
@@ -153,7 +153,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         {
             player.draw(c);
             player.gravity();
-        }
+        } //EOF
     } //EOF draw
 
 
