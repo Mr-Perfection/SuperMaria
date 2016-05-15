@@ -125,6 +125,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             Log.d(Name, "flagpole moved left!");
 //            flagpole.setMoveX(30);
             level.setFlagpoleMove(30);
+            level.setCoinMove(30);
         }
 //        else if(player.getX() < getWidth() *2/7)
         else if(level.playerGetX() < getWidth() *2/7)
@@ -133,8 +134,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             xpos--; //going against the travel distance. Subtract xpos
 //            flagpole.setMoveX(-30);
             level.setFlagpoleMove(-30);
+            level.setCoinMove(-30);
         }
-
+        //coin dectecting
+        if(level.coinX()>level.playerGetX() && !level.coinCollided(level.playerGetX(),level.playerGetY())) {
+            //true: coindraw is true
+            //false: coin draw is false not collided
+            level.setdrawCoin(true);
+            level.setcoinCollided(true);
+        }
+        else{
+            level.setdrawCoin(false);
+        }
+        //flag dectecting
         if(level.flagPoleCollided(level.playerGetX(),level.playerGetY()))
         {
             try {
@@ -201,6 +213,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int flagpole_bot = getHeight()*9/11;
         Objects flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
 
+        //initialize coin
+        Bitmap coinbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goldcoin);
+        int coin_left = background.getWidth()*3/5;
+        int coin_bot = getHeight()*9/11;
+        Objects coin = new Objects(coinbitmap,coin_left,coin_bot-(coinbitmap.getHeight()/2),coin_left+(coinbitmap.getWidth()/2),coin_bot);
+
         //initialize mushroom
         Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
         int mushroom_left = background.getWidth()/2;
@@ -213,7 +231,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         //initialize level
 //        level1 = new Level(flagpole,mushrooms,maps);
-        return new Level(player, flagpole,mushrooms,maps);
+        return new Level(player,flagpole,mushrooms,maps,coin);
     } //EOF initializeLevels
 
     private static void scoreBoard(Canvas c, int scoreX, int scoreY, int score)

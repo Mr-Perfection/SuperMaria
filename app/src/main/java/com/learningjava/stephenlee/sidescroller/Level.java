@@ -22,16 +22,21 @@ public class Level {
     private Objects flagpole;
     private List<Objects> mushrooms;
     private Maps map;
-    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map)
+    private Objects coin;
+    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map, Objects _coin)
     {
         flagpole = _flagpole;
         mushrooms = _mushroom;
         this.map = map;
         this.player = player;
+        coin = _coin;
     }
     /**Set methods **/
     public void setbgMove(int delta){map.bgMovement(delta);}
     public void setFlagpoleMove(int delta) {flagpole.setMoveX(delta);}
+    public void setCoinMove(int delta) {coin.setMoveX(delta);}
+    public void setcoinCollided(boolean coincollided){coin.setCollided(coincollided);}
+    public void setdrawCoin(boolean drawcoin) {coin.setdrawObject(drawcoin);}
     public void setMushroomMove(int delta)
     {
         for(int i=0;i<mushrooms.size();++i)
@@ -49,9 +54,15 @@ public class Level {
     public List<Objects> getMushrooms() {
         return mushrooms;
     }
+    public Boolean getdrawCoin(){return coin.getdrawObject();}
+    public Integer coinX(){return coin.getX();}
 
     /***Check whether flag is collided with the player**/
     public Boolean flagPoleCollided(int playerX, int playerY) {return flagpole.collisionDetected(playerX,playerY);}
+    public Boolean coinCollided(int playerX, int playerY) {
+
+        return coin.collisionDetected(playerX,playerY);
+    }
     public Boolean mushroomCollided(int playerX, int playerY)
     {
         for(int i=0;i<mushrooms.size();++i)
@@ -68,11 +79,18 @@ public class Level {
         for(int i=0;i<mushrooms.size();++i)
         {
             if(mushrooms.get(i).getX()>0)
+                mushrooms.get(i).setdrawObject(true);
                 mushrooms.get(i).drawObject(c);
+        } //eof for
+        if(getdrawCoin()){
+            coin.setCollided(false);
+            coin.setdrawObject(true);
+            coin.drawObject(c);
         }
+        flagpole.setdrawObject(true);
         flagpole.drawObject(c);
 
-    }
+    } //eof draw
 
 
-}
+} //eof class Level
