@@ -18,7 +18,8 @@ import java.util.Map;
 public class Level {
 
     //Initialize the flag
-    private Player player;
+//    private boolean GameOver = false;
+    public Player player;
     private Objects flagpole;
     private List<Objects> mushrooms;
     private Maps map;
@@ -30,6 +31,7 @@ public class Level {
         this.player = player;
     }
     /**Set methods **/
+//    public void setGameOver(boolean _gameOver){GameOver = _gameOver;}
     public void setbgMove(int delta){map.bgMovement(delta);}
     public void setFlagpoleMove(int delta) {flagpole.setMoveX(delta);}
     public void setMushroomMove(int delta)
@@ -39,9 +41,10 @@ public class Level {
     }
     public void playetSetVisibility(boolean isVisible){player.setVisibility(isVisible);}
     public void playerGravity(){player.gravity();}
-    public void playerUpdate(int eventX, int eventY){player.update(eventX,eventY);}
+    public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
 
     /***GET methods****/
+    //public boolean getGameOver(){return GameOver;}
     public int playerGetX() {return player.getX();}
     public int playerGetY() {return player.getY();}
     public Boolean playerGetVisibility() {return player.getVisibility();}
@@ -63,14 +66,14 @@ public class Level {
     }
     public void draw(Canvas c)
     {
-
-        map.draw(c);
-        for(int i=0;i<mushrooms.size();++i)
-        {
-            if(mushrooms.get(i).getX()>0)
-                mushrooms.get(i).drawObject(c);
-        }
-        flagpole.drawObject(c);
+//        if(!getGameOver())
+//        {
+            map.draw(c);
+            for (int i = 0; i < mushrooms.size(); ++i) {
+                if (mushrooms.get(i).getX() > 0)
+                    mushrooms.get(i).drawObject(c);
+            }
+            flagpole.drawObject(c);
 
     }
 

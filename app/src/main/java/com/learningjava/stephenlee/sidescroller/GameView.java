@@ -24,14 +24,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final String Name = GameView.class.getSimpleName();
     /*****Initializations******/
-    private Player player;
+//    private Player player;
     private GameThread gameThread;
 
     /***MAP settings****/
-    Map<Integer, Level> levels = new HashMap<>();
+    private Map<Integer, Level> levels = new HashMap<>();
     Level level1;
-    Level level;
-    int levelCounter=0;
+    private Level level;
+    private int levelCounter = 0;
     float gravity = 0f;
 
     //Score
@@ -71,7 +71,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //Initialize the levels
         for(int i=0;i<3;++i)
         {
-            levels.put(0,initializeLevel());
+            levels.put(i,initializeLevel());
         }
 
 //        initializeLevels();
@@ -137,16 +137,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         if(level.flagPoleCollided(level.playerGetX(),level.playerGetY()))
         {
+
+            Log.d(Name, "flagpole collided!");
             try {
+                ++levelCounter;
+                level = levels.get(levelCounter);
                 gameThread.sleep(2000);
+                Log.d(Name, "Current game level is: "+levelCounter);
+
             }
             catch (InterruptedException ex)
             {
                 Log.d(Name, "Something went wrong with flag collision!");
                 gameThread.interrupt();
             }
-            ++levelCounter;
-            level = levels.get(levelCounter);
+
         }
         //DRAW the score
         scoreBoard(c, scoreX, scoreY, score);
@@ -156,7 +161,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         //Check whether mushroom has been collided with player
-        if(level.mushroomCollided(level.playerGetX(), level.playerGetY()))
+        if (level.mushroomCollided(level.playerGetX(), level.playerGetY()))
         {
 //            player.setVisibility(false);
 
@@ -168,8 +173,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        if(player.getVisibility())
         if(level.playerGetVisibility())
         {
-            player.draw(c);
-            player.gravity();
+
+            level.player.draw(c);
+//            player.gravity();
+            level.playerGravity();
         } //EOF
 
 
@@ -189,7 +196,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
          /*SET player bitmaps*/
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
         Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
-        player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
+        Player player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
 
         //initialize the background
         Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);

@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import java.util.Map;
+
 /**
  * Created by StephenLee on 5/4/16.
  */
@@ -32,7 +34,7 @@ public class GameThread extends Thread {
 
             try {
                 synchronized (surfaceHolder) {
-
+//                    update(gameView.levelCounter, gameView.levels,gameView.level);
                     gameView.draw(canvas); //drawing frame
 
 
@@ -48,11 +50,13 @@ public class GameThread extends Thread {
 
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-// Thread was interrupted while sleeping.
-//                System.out.println("b4return");
+
                 return;
 
             }
         } //While
-    }
+    }//EOF run
+
+
+
 }

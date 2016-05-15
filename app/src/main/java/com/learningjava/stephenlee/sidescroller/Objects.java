@@ -65,6 +65,6 @@ public class Objects {
     //drawing the  objects
 
         c.drawBitmap(bitmap, null, dst, null);
-        System.out.println(dst);
+//        System.out.println(dst);
     }
 }
