@@ -36,7 +36,7 @@ public class Maps {
         xi += delta;
         xf += delta;
     }
-
+    public int getbgYf(){return yf;}
 
     public void draw(Canvas c)
     {

@@ -176,6 +176,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             gameThread.interrupt();
         }
+        level.setBooMove(30);
+        if (level.booCollided(level.playerGetX(), level.playerGetY()))
+        {
+            gameThread.interrupt();
+        }
+
         /**Level drawn***/
         level.draw(c);
 
@@ -231,13 +237,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int coin_bot = getHeight()*9/11;
         Objects coin = new Objects(coinbitmap,coin_left,coin_bot-(coinbitmap.getHeight()/2),coin_left+(coinbitmap.getWidth()/2),coin_bot);
 
-        //initialize mushroom
+        //initialize mushroom and boo
         List<Objects> mushrooms = new ArrayList<>();
-        difficultiesLevel(level, background, mushrooms);
+        List<Objects> boos = new ArrayList<>();
+
+        difficultiesLevel(level, background, mushrooms, boos);
 
         //initialize level
 //        level1 = new Level(flagpole,mushrooms,maps);
-        return new Level(player,flagpole,mushrooms,maps);
+        return new Level(player,flagpole,mushrooms,maps,boos);
     } //EOF initializeLevels
 
     /***difficultiesLevel
@@ -247,7 +255,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Description:
      * Set difficulties based on level.
      ****/
-    private void difficultiesLevel(int level, Bitmap background, List<Objects> mushrooms)
+    private void difficultiesLevel(int level, Bitmap background, List<Objects> mushrooms,List<Objects> boos)
     {
         //initialize mushroom
         Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
@@ -257,6 +265,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         {
             Objects mushroom = new Objects(mushroombitmap,mushroom_left + 300 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 300 * i,mushroom_bot);
             mushrooms.add(mushroom);
+        }
+        //initialize boo
+        Bitmap boobitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boo);
+        int boo_left = background.getWidth()*3/5;
+        int boo_bot = getHeight()*2/5;
+        for(int b = 0; b<level*2+1;++b){
+            Objects boo = new Objects(boobitmap,boo_left + 300 * b,boo_bot-boobitmap.getHeight(),boo_left+boobitmap.getWidth() + 300 * b,boo_bot);
+            boos.add(boo);
         }
     }
 

@@ -23,12 +23,16 @@ public class Level {
     private Objects flagpole;
     private List<Objects> mushrooms;
     private Maps map;
-    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map)
+    private List<Objects> boos;
+
+    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo)
     {
         flagpole = _flagpole;
         mushrooms = _mushroom;
         this.map = map;
         this.player = player;
+        boos = _boo;
+
     }
     /**Set methods **/
     public void setbgMove(int delta){map.bgMovement(delta);}
@@ -37,6 +41,19 @@ public class Level {
     {
         for(int i=0;i<mushrooms.size();++i)
             mushrooms.get(i).setMoveX(delta);
+    }
+    public void setBooMove(int delta)
+    {
+        for(int b = 0; b< boos.size(); ++b) {
+            if(boos.get(b).getY()> map.getbgYf()-200){
+                boos.get(b).setMoveX(delta);
+                boos.get(b).setMoveY(-delta);
+            }
+            else{
+                boos.get(b).setMoveX(delta);
+                boos.get(b).setMoveY(delta);
+            }
+        }
     }
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
@@ -50,6 +67,9 @@ public class Level {
     public List<Objects> getMushrooms() {
         return mushrooms;
     }
+    public List<Objects> getBoos() {
+        return boos;
+    }
 
     /***Check whether flag is collided with the player**/
     public Boolean flagPoleCollided(int playerX, int playerY) {return flagpole.collisionDetected(playerX,playerY);}
@@ -62,6 +82,17 @@ public class Level {
         }
         return false;
     }
+    public Boolean booCollided(int playerX, int playerY)
+    {
+        for(int b = 0; b< boos.size(); ++b) {
+            if(boos.get(b).getX()>0 && boos.get(b).getY()>0) {
+                if(boos.get(b).collisionDetected(playerX, playerY)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void draw(Canvas c)
     {
 
@@ -70,6 +101,12 @@ public class Level {
                 if (mushrooms.get(i).getX() > 0) {
                     mushrooms.get(i).setdrawObject(true);
                     mushrooms.get(i).drawObject(c);
+                }
+            }
+            for(int b = 0; b< boos.size(); ++b) {
+                if(boos.get(b).getX()>0 && boos.get(b).getY()>0) {
+                    boos.get(b).setdrawObject(true);
+                    boos.get(b).drawObject(c);
                 }
             }
             flagpole.setdrawObject(true);

@@ -49,7 +49,15 @@ public class Objects {
         this.centerX -= move;
         dst.set(xi,yi,xf,yf);
     }
+    public void setMoveY(int move) {
+        this.yi += move;
+        this.yf += move;
+        this.centerY += move;
+        dst.set(xi,yi,xf,yf);
+    }
     public int getX(){return xi;}
+    public int getY(){return yf;}
+
 
     /***
      *Collision detection function
