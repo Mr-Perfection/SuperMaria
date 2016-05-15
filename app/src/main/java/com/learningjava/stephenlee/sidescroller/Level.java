@@ -31,7 +31,6 @@ public class Level {
         this.player = player;
     }
     /**Set methods **/
-//    public void setGameOver(boolean _gameOver){GameOver = _gameOver;}
     public void setbgMove(int delta){map.bgMovement(delta);}
     public void setFlagpoleMove(int delta) {flagpole.setMoveX(delta);}
     public void setMushroomMove(int delta)
@@ -39,7 +38,6 @@ public class Level {
         for(int i=0;i<mushrooms.size();++i)
             mushrooms.get(i).setMoveX(delta);
     }
-    public void playetSetVisibility(boolean isVisible){player.setVisibility(isVisible);}
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
 
@@ -66,8 +64,7 @@ public class Level {
     }
     public void draw(Canvas c)
     {
-//        if(!getGameOver())
-//        {
+
             map.draw(c);
             for (int i = 0; i < mushrooms.size(); ++i) {
                 if (mushrooms.get(i).getX() > 0)

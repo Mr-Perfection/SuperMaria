@@ -39,8 +39,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int scoreX = 0;
     private int scoreY = 0;
 
-   //Objects
-    List<Objects> mushrooms = new ArrayList<>();
+
+
 
     public GameView(Context context)
     {
@@ -70,8 +70,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //Initialize the levels
         for(int i=0;i<3;++i)
         {
-            levels.put(i,initializeLevel());
-        }
+            levels.put(i,initializeLevel(i));
+        }   //EOF for loop
 
 //        initializeLevels();
 //        level1 = levels.get(0);
@@ -167,18 +167,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         }
-        else{
-
-            //Set the mushroom movement
-            level.setMushroomMove(30);
-
-        }
-        //DRAW the score
-        scoreBoard(c, scoreX, scoreY, score);
-
-
-
-
+        //Set the mushroom movement
+        level.setMushroomMove(30);
         //Check whether mushroom has been collided with player
         if (level.mushroomCollided(level.playerGetX(), level.playerGetY()))
         {
@@ -198,6 +188,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             level.playerGravity();
         } //EOF
 
+        //DRAW the score
+        scoreBoard(c, scoreX, scoreY, score);
+
+        //Display the level
+        displayLevel(c, getWidth()/2 - 50, 100, levelCounter+1);
+
 
     } //EOF draw
 
@@ -208,7 +204,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Description: this function is not static which means it is function that is an instance of the class.
      * It initializes the levels of the game by storing them into the hashmap <Integer, Level > which will contain all the the necessary data for three levels
      * *****/
-    private Level initializeLevel()
+    private Level initializeLevel(int level)
     {
 
         Log.d(Name, "InitiallizeLevel!!");
@@ -236,20 +232,42 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Objects coin = new Objects(coinbitmap,coin_left,coin_bot-(coinbitmap.getHeight()/2),coin_left+(coinbitmap.getWidth()/2),coin_bot);
 
         //initialize mushroom
-        Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
-        int mushroom_left = background.getWidth()/2;
-        int mushroom_bot = getHeight()*9/11;
+        List<Objects> mushrooms = new ArrayList<>();
+        difficultiesLevel(level, background, mushrooms);
 
-        for(i=0;i<5;++i)
-        {
-            Objects mushroom = new Objects(mushroombitmap,mushroom_left + 300 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 300 * i,mushroom_bot);
-            mushrooms.add(mushroom);
-        }
         //initialize level
 //        level1 = new Level(flagpole,mushrooms,maps);
         return new Level(player,flagpole,mushrooms,maps);
     } //EOF initializeLevels
 
+    /***difficultiesLevel
+     * @param: level - get the level integer from level1,2,3
+     * @param: background - get the bitmap of background to get width and height
+     * @param: mushrooms - get a list of mushrooms so we can customize how many are they in each level
+     * Description:
+     * Set difficulties based on level.
+     ****/
+    private void difficultiesLevel(int level, Bitmap background, List<Objects> mushrooms)
+    {
+        //initialize mushroom
+        Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
+        int mushroom_left = background.getWidth()/2;
+        int mushroom_bot = getHeight()*9/11;
+        for(int i = 0;i<level*2+1;++i)
+        {
+            Objects mushroom = new Objects(mushroombitmap,mushroom_left + 300 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 300 * i,mushroom_bot);
+            mushrooms.add(mushroom);
+        }
+    }
+
+    /***difficultiesLevel
+     * @param: c - Canvas
+     * @param: scoreX - X position of Score label
+     * @param: scoreY - Y position of Score label
+     * @param: score - score value
+     * Description:
+     *Display score board on the screen.
+     ****/
     private static void scoreBoard(Canvas c, int scoreX, int scoreY, int score)
     {
         //DRAW the score
@@ -259,6 +277,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setStyle(Paint.Style.FILL);
         String s = Integer.toString(score);
         c.drawText(s, scoreX, scoreY, paint);
+    }
+    private static void displayLevel(Canvas c, int levelX, int levelY, int level)
+    {
+        //DRAW the score
+        Paint paint = new Paint();
+        paint.setColor(Color.GRAY);
+        paint.setTextSize(100);
+        paint.setStyle(Paint.Style.FILL);
+        String s = Integer.toString(level);
+        StringBuilder str = new StringBuilder();
+        str.append("LEVEL " + s);
+        System.out.println(str.toString());
+        c.drawText(str.toString(), levelX, levelY, paint);
     }
 
 
