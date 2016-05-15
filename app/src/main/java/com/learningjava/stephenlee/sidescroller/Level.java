@@ -67,9 +67,12 @@ public class Level {
 
             map.draw(c);
             for (int i = 0; i < mushrooms.size(); ++i) {
-                if (mushrooms.get(i).getX() > 0)
+                if (mushrooms.get(i).getX() > 0) {
+                    mushrooms.get(i).setdrawObject(true);
                     mushrooms.get(i).drawObject(c);
+                }
             }
+            flagpole.setdrawObject(true);
             flagpole.drawObject(c);
 
     }

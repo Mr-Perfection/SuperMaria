@@ -18,6 +18,8 @@ public class Objects {
     private Paint paint;
     public int centerX;
     public int centerY;
+    private boolean drawobject = false;
+
     /***
      * Contructor for Objects class
      * @param : _bitmap is for the object image.
@@ -61,12 +63,15 @@ public class Objects {
     }
 
 
+    public boolean getdrawObject(){return drawobject;}
+    public void setdrawObject(boolean _drawobject){drawobject = _drawobject;}
 
     public void drawObject(Canvas c)
     {
     //drawing the  objects
-
-        c.drawBitmap(bitmap, null, dst, null);
+        if(getdrawObject()) {
+            c.drawBitmap(bitmap, null, dst, null);
 //        System.out.println(dst);
+        }
     }
 }
