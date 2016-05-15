@@ -29,7 +29,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /***MAP settings****/
 //    Map<Integer, List<Object>>
     Level level1;
-    Maps maps;
     float gravity = 0f;
 
     //Score
@@ -39,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int scoreY = 0;
 
    //Objects
-    List<Objects> mushrooms = new ArrayList<Objects>();
+    List<Objects> mushrooms = new ArrayList<>();
 
     public GameView(Context context)
     {
@@ -66,8 +65,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         scoreX =100;
         scoreY = getHeight()/11;
 
-
+        //Initialize the levels
         initializeLevels();
+
         //Start the thread
         gameThread = new GameThread(this);  //Set game thread constructor
         gameThread.start();
@@ -103,10 +103,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void draw(Canvas c) {
 
-        maps.draw(c);
+//        maps.draw(c);
         if(player.getX() > getWidth()*4/7)
         {
-            maps.bgMovement(-30);
+            level1.setbgMove(-30);
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
@@ -116,7 +116,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         else if(player.getX() < getWidth() *2/7)
         {
-            maps.bgMovement(30);
+            level1.setbgMove(30);
             xpos--; //going against the travel distance. Subtract xpos
 //            flagpole.setMoveX(-30);
             level1.setFlagpoleMove(-30);
@@ -136,13 +136,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             player.setVisibility(false);
             gameThread.interrupt();
         }
+
+        level1.draw(c);
+
         if(player.getVisibility())
         {
             player.draw(c);
             player.gravity();
         } //EOF
 
-        level1.draw(c);
+
     } //EOF draw
 
 
@@ -157,7 +160,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int i, j;
         //initialize the background
         Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
-        maps = new Maps(background, background.getWidth() * getHeight() / background.getHeight(), getHeight());
+        Maps maps = new Maps(background, background.getWidth() * getHeight() / background.getHeight(), getHeight());
         //Initialize the flag
         Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
         int flagpole_left = background.getWidth() * 9/11;
@@ -174,7 +177,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             mushrooms.add(mushroom);
         }
         //initialize level
-        level1 = new Level(flagpole,mushrooms);
+        level1 = new Level(flagpole,mushrooms,maps);
 
     } //EOF initializeLevels
 
