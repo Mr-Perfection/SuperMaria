@@ -18,26 +18,37 @@ import java.util.Map;
 public class Level {
 
     //Initialize the flag
-
+    private Player player;
     private Objects flagpole;
     private List<Objects> mushrooms;
     private Maps map;
-    public Level(Objects _flagpole, List<Objects> _mushroom, Maps map)
+    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map)
     {
         flagpole = _flagpole;
         mushrooms = _mushroom;
         this.map = map;
+        this.player = player;
     }
     /**Set methods **/
     public void setbgMove(int delta){map.bgMovement(delta);}
-
     public void setFlagpoleMove(int delta) {flagpole.setMoveX(delta);}
     public void setMushroomMove(int delta)
     {
         for(int i=0;i<mushrooms.size();++i)
             mushrooms.get(i).setMoveX(delta);
     }
+    public void playetSetVisibility(boolean isVisible){player.setVisibility(isVisible);}
+    public void playerGravity(){player.gravity();}
+    public void playerUpdate(int eventX, int eventY){player.update(eventX,eventY);}
 
+    /***GET methods****/
+    public int playerGetX() {return player.getX();}
+    public int playerGetY() {return player.getY();}
+    public Boolean playerGetVisibility() {return player.getVisibility();}
+
+    public List<Objects> getMushrooms() {
+        return mushrooms;
+    }
 
     /***Check whether flag is collided with the player**/
     public Boolean flagPoleCollided(int playerX, int playerY) {return flagpole.collisionDetected(playerX,playerY);}
@@ -60,6 +71,7 @@ public class Level {
                 mushrooms.get(i).drawObject(c);
         }
         flagpole.drawObject(c);
+
     }
 
 

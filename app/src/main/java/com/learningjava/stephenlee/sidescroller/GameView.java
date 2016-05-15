@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread gameThread;
 
     /***MAP settings****/
-//    Map<Integer, List<Object>>
+    Map<Integer, Level> levels = new HashMap<>();
     Level level1;
+    Level level;
+    int levelCounter=0;
     float gravity = 0f;
 
     //Score
@@ -57,16 +60,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder)
     {
         /*SET player bitmaps*/
-        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
-        Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
-        player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
+//        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
+//        Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
+//        player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
 
         //Set score
         scoreX =100;
         scoreY = getHeight()/11;
 
         //Initialize the levels
-        initializeLevels();
+        for(int i=0;i<3;++i)
+        {
+            levels.put(0,initializeLevel());
+        }
+
+//        initializeLevels();
+//        level1 = levels.get(0);
+        level = levels.get(levelCounter);
 
         //Start the thread
         gameThread = new GameThread(this);  //Set game thread constructor
@@ -95,7 +105,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     {
         int touchX = (int)event.getX();
         int touchY = (int)event.getX();
-        player.update(touchX, touchY);
+        level.playerUpdate(touchX, touchY);
+//        player.update(touchX, touchY);
         return true;
     }
 
@@ -104,42 +115,58 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas c) {
 
 //        maps.draw(c);
-        if(player.getX() > getWidth()*4/7)
+//        if(player.getX() > getWidth()*4/7)
+        if(level.playerGetX() > getWidth()*4/7)
         {
-            level1.setbgMove(-30);
+            level.setbgMove(-30);
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
             Log.d(Name, "flagpole moved left!");
 //            flagpole.setMoveX(30);
-            level1.setFlagpoleMove(30);
+            level.setFlagpoleMove(30);
         }
-        else if(player.getX() < getWidth() *2/7)
+//        else if(player.getX() < getWidth() *2/7)
+        else if(level.playerGetX() < getWidth() *2/7)
         {
-            level1.setbgMove(30);
+            level.setbgMove(30);
             xpos--; //going against the travel distance. Subtract xpos
 //            flagpole.setMoveX(-30);
-            level1.setFlagpoleMove(-30);
+            level.setFlagpoleMove(-30);
         }
 
-        if(level1.flagPoleCollided(player.getX(),player.getY())) {gameThread.interrupt();}
+        if(level.flagPoleCollided(level.playerGetX(),level.playerGetY()))
+        {
+            try {
+                gameThread.sleep(2000);
+            }
+            catch (InterruptedException ex)
+            {
+                Log.d(Name, "Something went wrong with flag collision!");
+                gameThread.interrupt();
+            }
+            ++levelCounter;
+            level = levels.get(levelCounter);
+        }
         //DRAW the score
         scoreBoard(c, scoreX, scoreY, score);
 
         //Set the mushroom movement
-        level1.setMushroomMove(30);
+        level.setMushroomMove(30);
 
 
         //Check whether mushroom has been collided with player
-        if(level1.mushroomCollided(player.getX(), player.getY()))
+        if(level.mushroomCollided(level.playerGetX(), level.playerGetY()))
         {
-            player.setVisibility(false);
+//            player.setVisibility(false);
+
             gameThread.interrupt();
         }
         /**Level drawn***/
-        level1.draw(c);
+        level.draw(c);
 
-        if(player.getVisibility())
+//        if(player.getVisibility())
+        if(level.playerGetVisibility())
         {
             player.draw(c);
             player.gravity();
@@ -155,12 +182,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Description: this function is not static which means it is function that is an instance of the class.
      * It initializes the levels of the game by storing them into the hashmap <Integer, Level > which will contain all the the necessary data for three levels
      * *****/
-    private void initializeLevels()
+    private Level initializeLevel()
     {
+
         int i, j;
+         /*SET player bitmaps*/
+        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
+        Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
+        player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
+
         //initialize the background
         Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
         Maps maps = new Maps(background, background.getWidth() * getHeight() / background.getHeight(), getHeight());
+
         //Initialize the flag
         Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
         int flagpole_left = background.getWidth() * 9/11;
@@ -171,14 +205,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
         int mushroom_left = background.getWidth()/2;
         int mushroom_bot = getHeight()*9/11;
+
         for(i=0;i<5;++i)
         {
             Objects mushroom = new Objects(mushroombitmap,mushroom_left + 300 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 300 * i,mushroom_bot);
             mushrooms.add(mushroom);
         }
         //initialize level
-        level1 = new Level(flagpole,mushrooms,maps);
-
+//        level1 = new Level(flagpole,mushrooms,maps);
+        return new Level(player, flagpole,mushrooms,maps);
     } //EOF initializeLevels
 
     private static void scoreBoard(Canvas c, int scoreX, int scoreY, int score)
