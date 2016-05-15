@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,20 +38,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int scoreX = 0;
     private int scoreY = 0;
 
-
-    //background
-
-    private int x1, x2, y1, y2 = 0;
-    Rect bk = new Rect();
-
-    //Flagepole
-    private Objects flagpole;
-
-    /**Objects**/
-
-    //mushroom
-    private Bitmap mushroombitmap;
-    private Objects mushroom;
+   //Objects
+    List<Objects> mushrooms = new ArrayList<Objects>();
 
     public GameView(Context context)
     {
@@ -76,25 +66,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         scoreX =100;
         scoreY = getHeight()/11;
 
+
+        int i, j;
         //initialize the background
         Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
         maps = new Maps(background, background.getWidth() * getHeight() / background.getHeight(), getHeight());
-
         //Initialize the flag
         Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
         int flagpole_left = background.getWidth() * 9/11;
-//                background.getWidth()*9/10;
         int flagpole_bot = getHeight()*9/11;
-        flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
+        Objects flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
 
         //initialize mushroom
-        mushroombitmap= BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
+        Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
         int mushroom_left = background.getWidth()/2;
         int mushroom_bot = getHeight()*9/11;
-        mushroom = new Objects(mushroombitmap,mushroom_left,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth(),mushroom_bot);
-
+//        Objects mushroom = new Objects(mushroombitmap,mushroom_left,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth(),mushroom_bot);
+        for(i=0;i<5;++i)
+        {
+            Objects mushroom = new Objects(mushroombitmap,mushroom_left + 300 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 300 * i,mushroom_bot);
+            mushrooms.add(mushroom);
+        }
         //initialize level
-        level1 = new Level(flagpole,mushroom);
+        level1 = new Level(flagpole,mushrooms);
+
         //Start the thread
         gameThread = new GameThread(this);  //Set game thread constructor
         gameThread.start();
@@ -111,7 +106,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         // TODO Auto-generated method stub
         // tell the thread to shut down and wait for it to finish
         // this is a clean shutdown
-        Log.d(Name, "Surface is getting destroyeeddd!");
         gameThread.interrupt(); //Stop the thread
         Log.d(Name, "Thread shut down cleanly");
 
@@ -159,16 +153,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         //DRAW the score
-        scoreBoard(c,scoreX,scoreY,score);
+        scoreBoard(c, scoreX, scoreY, score);
 
         //Set the mushroom movement
-        mushroom.setMoveX(30); //Moving to the left
-        //setting goomba somewhere on the rolling background
-        if(mushroom.getX() > 0)
-            mushroom.drawObject(c);
+        level1.setMushroomMove(30);
+
 
         //Check whether mushroom has been collided with player
-        if(mushroom.collisionDetected(player.getX(), player.getY()))
+        if(level1.mushroomCollided(player.getX(), player.getY()))
         {
             player.setVisibility(false);
             gameThread.interrupt();
@@ -179,7 +171,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             player.gravity();
         } //EOF
 
-        flagpole.drawObject(c);
+        level1.draw(c);
     } //EOF draw
 
 
@@ -195,10 +187,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         c.drawText(s, scoreX, scoreY, paint);
     }
 
-    private static void initializeLevel()
-    {
 
-    }
 
 
 
