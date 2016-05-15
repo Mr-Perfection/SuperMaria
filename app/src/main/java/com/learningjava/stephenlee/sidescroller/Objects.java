@@ -60,6 +60,8 @@ public class Objects {
         return false;
     }
 
+
+
     public void drawObject(Canvas c)
     {
     //drawing the  objects
