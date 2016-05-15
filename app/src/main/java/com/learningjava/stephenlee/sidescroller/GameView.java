@@ -29,7 +29,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     /***MAP settings****/
     private Map<Integer, Level> levels = new HashMap<>();
-    Level level1;
     private Level level;
     private int levelCounter = 0;
     float gravity = 0f;
@@ -142,6 +141,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 ++levelCounter;
                 level = levels.get(levelCounter);
+
                 gameThread.sleep(2000);
                 Log.d(Name, "Current game level is: "+levelCounter);
 
@@ -153,11 +153,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
         }
+        else{
+
+            //Set the mushroom movement
+            level.setMushroomMove(30);
+
+        }
         //DRAW the score
         scoreBoard(c, scoreX, scoreY, score);
 
-        //Set the mushroom movement
-        level.setMushroomMove(30);
+
 
 
         //Check whether mushroom has been collided with player
@@ -191,6 +196,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * *****/
     private Level initializeLevel()
     {
+
+        Log.d(Name, "InitiallizeLevel!!");
 
         int i, j;
          /*SET player bitmaps*/
