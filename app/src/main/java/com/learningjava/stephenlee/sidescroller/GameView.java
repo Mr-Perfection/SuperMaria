@@ -124,7 +124,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             Log.d(Name, "flagpole moved left!");
 //            flagpole.setMoveX(30);
             level.setFlagpoleMove(30);
-            level.setCoinMove(30);
+//            level.setCoinMove(30);
         }
 //        else if(player.getX() < getWidth() *2/7)
         else if(level.playerGetX() < getWidth() *2/7)
@@ -133,18 +133,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             xpos--; //going against the travel distance. Subtract xpos
 //            flagpole.setMoveX(-30);
             level.setFlagpoleMove(-30);
-            level.setCoinMove(-30);
+//            level.setCoinMove(-30);
         }
         //coin dectecting
-        if(level.coinX()>level.playerGetX() && !level.coinCollided(level.playerGetX(),level.playerGetY())) {
-            //true: coindraw is true
-            //false: coin draw is false not collided
-            level.setdrawCoin(true);
-            level.setcoinCollided(true);
-        }
-        else{
-            level.setdrawCoin(false);
-        }
+//        if(level.coinX()>level.playerGetX() && !level.coinCollided(level.playerGetX(),level.playerGetY())) {
+//            //true: coindraw is true
+//            //false: coin draw is false not collided
+//            level.setdrawCoin(true);
+//            level.setcoinCollided(true);
+//        }
+//        else{
+//            level.setdrawCoin(false);
+//        }
         //flag dectecting
         if(level.flagPoleCollided(level.playerGetX(),level.playerGetY()))
         {
@@ -163,6 +163,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 Log.d(Name, "Something went wrong with flag collision!");
                 gameThread.interrupt();
             }
+
 
 
         }
@@ -246,7 +247,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         //initialize level
 //        level1 = new Level(flagpole,mushrooms,maps);
-        return new Level(player,flagpole,mushrooms,maps,coin);
+        return new Level(player,flagpole,mushrooms,maps);
     } //EOF initializeLevels
 
     private static void scoreBoard(Canvas c, int scoreX, int scoreY, int score)
