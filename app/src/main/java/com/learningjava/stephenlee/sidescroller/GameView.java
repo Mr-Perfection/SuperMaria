@@ -136,7 +136,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             player.setVisibility(false);
             gameThread.interrupt();
         }
-
+        /**Level drawn***/
         level1.draw(c);
 
         if(player.getVisibility())
