@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Map;
+
 /**
  * Created by StephenLee on 5/4/16.
  */
@@ -24,6 +26,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread gameThread;
 
     /***MAP settings****/
+    Level level1;
+    Maps maps;
     float gravity = 0f;
 
     //Score
@@ -34,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     //background
-    private Bitmap background; //THIS IS FULL SIZED BACKGROUND
+
     private int x1, x2, y1, y2 = 0;
     Rect bk = new Rect();
 
@@ -67,13 +71,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
         Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
         player = new Player(playerBitmap,animatedBitmap, getWidth(), getHeight()); //Set player constructor
+
         //Set score
         scoreX =100;
         scoreY = getHeight()/11;
+
         //initialize the background
-        background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
-        x2 = background.getWidth() * getHeight() / background.getHeight();
-        y2 = getHeight();
+        Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.level_1short1);
+        maps = new Maps(background, background.getWidth() * getHeight() / background.getHeight(), getHeight());
+
         //Initialize the flag
         Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
         int flagpole_left = background.getWidth() * 9/11;
@@ -87,6 +93,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int mushroom_bot = getHeight()*9/11;
         mushroom = new Objects(mushroombitmap,mushroom_left,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth(),mushroom_bot);
 
+        //initialize level
+        level1 = new Level(flagpole,mushroom);
         //Start the thread
         gameThread = new GameThread(this);  //Set game thread constructor
         gameThread.start();
@@ -122,30 +130,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     public void draw(Canvas c) {
-        //Set rect background to...
-        bk.set(x1, y1, x2, y2);
 
-        c.drawBitmap(background, null, bk, null);
+        maps.draw(c);
         if(player.getX() > getWidth()*4/7)
         {
-            x2 -= 30;
-            x1 -= 30;
+            maps.bgMovement(-30);
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
             Log.d(Name, "flagpole moved left!");
-            flagpole.setMoveX(30);
-
+//            flagpole.setMoveX(30);
+            level1.setFlagpoleMove(30);
         }
         else if(player.getX() < getWidth() *2/7)
         {
-            x2 += 30;
-            x1 += 30;
+            maps.bgMovement(30);
             xpos--; //going against the travel distance. Subtract xpos
-            flagpole.setMoveX(-30);
+//            flagpole.setMoveX(-30);
+            level1.setFlagpoleMove(-30);
         }
 
-        if(flagpole.collisionDetected(player.getX(),player.getY()))
+        if(level1.flagPoleCollided(player.getX(),player.getY()))
         {
 
             gameThread.interrupt();
@@ -188,6 +193,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setStyle(Paint.Style.FILL);
         String s = Integer.toString(score);
         c.drawText(s, scoreX, scoreY, paint);
+    }
+
+    private static void initializeLevel()
+    {
+
     }
 
 
