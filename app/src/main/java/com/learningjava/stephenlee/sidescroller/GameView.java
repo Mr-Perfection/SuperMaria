@@ -171,7 +171,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             gameThread.interrupt();
         }
-        level.setBooMove(30);
+        level.setBooMove(100);
         if (level.booCollided(level.playerGetX(), level.playerGetY()))
         {
             gameThread.interrupt();
@@ -222,7 +222,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         //Initialize the flag
         Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
-        int flagpole_left = background.getWidth() * 9/11;
+        int flagpole_left = background.getWidth() * 10/11;
         int flagpole_bot = getHeight()*9/11;
         Objects flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
 
@@ -258,7 +258,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int mushroom_bot = getHeight()*9/11;
         for(int i = 0;i<level*2+1;++i)
         {
-            Objects mushroom = new Objects(mushroombitmap,mushroom_left + 300 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 300 * i,mushroom_bot);
+            Objects mushroom = new Objects(mushroombitmap,mushroom_left + 450 * i,mushroom_bot-mushroombitmap.getHeight(),mushroom_left+mushroombitmap.getWidth() + 450 * i,mushroom_bot);
             mushrooms.add(mushroom);
         }
         //initialize boo
