@@ -25,6 +25,7 @@ public class Level {
     private Maps map;
     private List<Objects> boos;
     private List<Objects> coins;
+    private Objects terrain;
 
 
     public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo,List<Objects> _coins)

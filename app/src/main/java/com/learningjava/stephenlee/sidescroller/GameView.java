@@ -121,7 +121,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
-            Log.d(Name, "flagpole moved left!");
+//            Log.d(Name, "flagpole moved left!");
             level.setFlagpoleMove(30);
             level.setCoinMove(30);
 
@@ -197,8 +197,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
     } //EOF draw
-
-
     /****
      * initializeLevels
      * @params: None
@@ -207,10 +205,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * *****/
     private Level initializeLevel(int level)
     {
-
         Log.d(Name, "InitiallizeLevel!!");
-
         int i, j;
+
          /*SET player bitmaps*/
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sungsoo);
         Bitmap animatedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.troll);
@@ -222,20 +219,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         //Initialize the flag
         Bitmap _flagpole = BitmapFactory.decodeResource(getResources(), R.drawable.supermarioflag);
-        int flagpole_left = background.getWidth() * 10/11;
+        int flagpole_left = background.getWidth();
         int flagpole_bot = getHeight()*9/11;
         Objects flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
 
-        //initialize coin
-        Bitmap coinbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goldcoin);
-        int coin_left = background.getWidth()*3/5;
-        int coin_bot = getHeight()*9/11;
-        Objects coin = new Objects(coinbitmap,coin_left,coin_bot-(coinbitmap.getHeight()/2),coin_left+(coinbitmap.getWidth()/2),coin_bot);
 
-        //initialize mushroom and boo and coin
+//        //initialize mushroom, boo, coin and terrain
         List<Objects> mushrooms = new ArrayList<>();
         List<Objects> boos = new ArrayList<>();
         List<Objects> coins = new ArrayList<>();
+
         difficultiesLevel(level, background, mushrooms, boos,coins);
 
         //initialize level
@@ -307,7 +300,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         String s = Integer.toString(level);
         StringBuilder str = new StringBuilder();
         str.append("LEVEL " + s);
-        System.out.println(str.toString());
+//        System.out.println(str.toString());
         c.drawText(str.toString(), levelX, levelY, paint);
     }
 
