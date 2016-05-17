@@ -175,11 +175,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 lives --;
                 System.out.println("what's the num of lives?" +lives);
                 level.setIntialLives(lives);
-                System.out.println("what's the getIntiallives?" +level.getIntialLives());
-                level.setnoLives(false);
-            }
+                System.out.println("what's the getIntiallives?" +level.getIntialLives());}
             if(level.getIntialLives() == 0){
-                level.setnoLives(true);
                 gameThread.interrupt();
             }
         }
@@ -192,10 +189,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 System.out.println("what's the num of lives?" +lives);
                 level.setIntialLives(lives);
                 System.out.println("what's the getIntiallives?" +level.getIntialLives());
-                level.setnoLives(false);
             }
             if(level.getIntialLives() == 0){
-                level.setnoLives(true);
                 gameThread.interrupt();
             }
         }

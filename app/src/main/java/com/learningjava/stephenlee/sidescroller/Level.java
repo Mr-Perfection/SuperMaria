@@ -78,7 +78,6 @@ public class Level {
     }
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
-    public void setnoLives(boolean _noLives){noLives = _noLives;}
     public void setIntialLives(int _numLives){numLives = _numLives;}
 
     /***GET methods****/
@@ -107,7 +106,6 @@ public class Level {
         }
         return true;
     }
-    public boolean isnoLives(){return noLives;}
     public int getIntialLives(){return numLives;}
 
 
