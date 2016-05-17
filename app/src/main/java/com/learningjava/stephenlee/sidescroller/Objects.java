@@ -19,6 +19,8 @@ public class Objects {
     public int centerX;
     public int centerY;
     private boolean drawobject = false;
+    private boolean noObjectflag = false;
+
 
     /***
      * Contructor for Objects class
@@ -69,6 +71,8 @@ public class Objects {
         if (dst.contains(x,y)){return true;}
         return false;
     }
+    public boolean isNoObjectflag(){return noObjectflag;}
+    public void setNoObjectflag(boolean _noObjectflag){noObjectflag = _noObjectflag;}
 
 
     public boolean getdrawObject(){return drawobject;}

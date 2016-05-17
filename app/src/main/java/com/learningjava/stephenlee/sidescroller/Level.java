@@ -24,14 +24,18 @@ public class Level {
     private List<Objects> mushrooms;
     private Maps map;
     private List<Objects> boos;
+    private List<Objects> coins;
 
-    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo)
+
+    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo,List<Objects> _coins)
     {
         flagpole = _flagpole;
         mushrooms = _mushroom;
         this.map = map;
         this.player = player;
         boos = _boo;
+        coins = _coins;
+
 
     }
     /**Set methods **/
@@ -55,6 +59,21 @@ public class Level {
             }
         }
     }
+    public void setCoinMove(int delta){
+        for(int cn = 0; cn < coins.size(); ++cn){
+            coins.get(cn).setMoveX(delta);
+        }
+    }
+    public void setnoCoin(boolean noCoin) {
+        for (int cn = 0; cn < coins.size(); ++cn) {
+            coins.get(cn).setNoObjectflag(noCoin);
+        }
+    }
+    public void setdrawCoin(boolean ddrawcoin) {
+        for (int cn = 0; cn < coins.size(); ++cn) {
+            coins.get(cn).setdrawObject(ddrawcoin);
+        }
+    }
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
 
@@ -70,7 +89,20 @@ public class Level {
     public List<Objects> getBoos() {
         return boos;
     }
-
+    public Boolean noCoin() {
+        for (int cn = 0; cn < coins.size(); ++cn) {
+            coins.get(cn).isNoObjectflag();
+            return true;
+        }
+        return false;
+    }
+    public Boolean getdrawCoin( ) {
+        for (int cn = 0; cn < coins.size(); ++cn) {
+            coins.get(cn).getdrawObject();
+            return false;
+        }
+        return true;
+    }
     /***Check whether flag is collided with the player**/
     public Boolean flagPoleCollided(int playerX, int playerY) {return flagpole.collisionDetected(playerX,playerY);}
     public Boolean mushroomCollided(int playerX, int playerY)
@@ -93,6 +125,18 @@ public class Level {
         }
         return false;
     }
+    public Boolean coinCollided(int playerX, int playerY) {
+        for (int cn = 0; cn < coins.size(); ++cn) {
+            if(coins.get(cn).collisionDetected(playerX, playerY)&&(coins.get(cn).getX() <= playerX || coins.get(cn).getX() >= playerX))
+            {
+                coins.get(cn).setdrawObject(false);
+                coins.get(cn).setNoObjectflag(true);
+                return true;
+            }
+
+        }
+        return false;
+    }
     public void draw(Canvas c)
     {
 
@@ -109,6 +153,13 @@ public class Level {
                     boos.get(b).drawObject(c);
                 }
             }
+        for(int cn = 0; cn < coins.size(); ++cn) {
+            if (!coins.get(cn).isNoObjectflag()) {
+
+                coins.get(cn).setdrawObject(true);
+                coins.get(cn).drawObject(c);
+            }
+        }
             flagpole.setdrawObject(true);
             flagpole.drawObject(c);
 

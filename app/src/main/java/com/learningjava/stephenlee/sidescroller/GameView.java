@@ -122,29 +122,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
             Log.d(Name, "flagpole moved left!");
-//            flagpole.setMoveX(30);
             level.setFlagpoleMove(30);
-//            level.setCoinMove(30);
+            level.setCoinMove(30);
+
         }
 //        else if(player.getX() < getWidth() *2/7)
         else if(level.playerGetX() < getWidth() *2/7)
         {
             level.setbgMove(30);
             xpos--; //going against the travel distance. Subtract xpos
-//            flagpole.setMoveX(-30);
             level.setFlagpoleMove(-30);
-//            level.setCoinMove(-30);
+            level.setCoinMove(-30);
         }
-        //coin dectecting
-//        if(level.coinX()>level.playerGetX() && !level.coinCollided(level.playerGetX(),level.playerGetY())) {
-//            //true: coindraw is true
-//            //false: coin draw is false not collided
-//            level.setdrawCoin(true);
-//            level.setcoinCollided(true);
-//        }
-//        else{
-//            level.setdrawCoin(false);
-//        }
+
+        if(level.coinCollided(level.playerGetX(),level.playerGetY())){
+            level.setdrawCoin(false);
+            level.setnoCoin(true);
+        }
+
         //flag dectecting
         if(level.flagPoleCollided(level.playerGetX(),level.playerGetY()))
         {
@@ -237,15 +232,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int coin_bot = getHeight()*9/11;
         Objects coin = new Objects(coinbitmap,coin_left,coin_bot-(coinbitmap.getHeight()/2),coin_left+(coinbitmap.getWidth()/2),coin_bot);
 
-        //initialize mushroom and boo
+        //initialize mushroom and boo and coin
         List<Objects> mushrooms = new ArrayList<>();
         List<Objects> boos = new ArrayList<>();
-
-        difficultiesLevel(level, background, mushrooms, boos);
+        List<Objects> coins = new ArrayList<>();
+        difficultiesLevel(level, background, mushrooms, boos,coins);
 
         //initialize level
 //        level1 = new Level(flagpole,mushrooms,maps);
-        return new Level(player,flagpole,mushrooms,maps,boos);
+        return new Level(player,flagpole,mushrooms,maps,boos,coins);
     } //EOF initializeLevels
 
     /***difficultiesLevel
@@ -255,7 +250,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Description:
      * Set difficulties based on level.
      ****/
-    private void difficultiesLevel(int level, Bitmap background, List<Objects> mushrooms,List<Objects> boos)
+    private void difficultiesLevel(int level, Bitmap background, List<Objects> mushrooms,List<Objects> boos, List<Objects> coins)
     {
         //initialize mushroom
         Bitmap mushroombitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goomba1);
@@ -270,9 +265,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap boobitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boo);
         int boo_left = background.getWidth()*3/5;
         int boo_bot = getHeight()*2/5;
-        for(int b = 0; b<level*2+1;++b){
+        for(int b = 0; b<level+1;++b){
             Objects boo = new Objects(boobitmap,boo_left + 300 * b,boo_bot-boobitmap.getHeight(),boo_left+boobitmap.getWidth() + 300 * b,boo_bot);
             boos.add(boo);
+        }
+        //initialize coin
+        Bitmap coinbitmap = BitmapFactory.decodeResource(getResources(), R.drawable.goldcoin);
+        int coin_left = background.getWidth()*3/5;
+        int coin_bot = getHeight()*9/11;
+        for (int cn = 0; cn<level+1; ++cn) {
+            Objects coin = new Objects(coinbitmap,coin_left +400 * cn,coin_bot-(coinbitmap.getHeight()/2),coin_left+((coinbitmap.getWidth()/2 + 400 * cn)),coin_bot);
+            coins.add(coin);
         }
     }
 
