@@ -39,7 +39,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int scoreX = 0;
     private int scoreY = 0;
 
-
+    //livies
+    private int lives = 3;
 
 
     public GameView(Context context)
@@ -169,12 +170,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         {
 //            player.setVisibility(false);
 
-            gameThread.interrupt();
+//            gameThread.interrupt();
+            if(lives >= 1){
+                lives --;
+                System.out.println("what's the num of lives?" +lives);
+                level.setIntialLives(lives);
+                System.out.println("what's the getIntiallives?" +level.getIntialLives());
+                level.setnoLives(false);
+            }
+            if(level.getIntialLives() == 0){
+                level.setnoLives(true);
+                gameThread.interrupt();
+            }
         }
         level.setBooMove(100);
         if (level.booCollided(level.playerGetX(), level.playerGetY()))
         {
-            gameThread.interrupt();
+//            gameThread.interrupt();
+            if(lives >= 1){
+                lives --;
+                System.out.println("what's the num of lives?" +lives);
+                level.setIntialLives(lives);
+                System.out.println("what's the getIntiallives?" +level.getIntialLives());
+                level.setnoLives(false);
+            }
+            if(level.getIntialLives() == 0){
+                level.setnoLives(true);
+                gameThread.interrupt();
+            }
         }
 
         /**Level drawn***/
@@ -194,6 +217,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         //Display the level
         displayLevel(c, getWidth()/2 - 50, 100, levelCounter+1);
+
+        //Display lives
+        displayLives(c,scoreX,scoreY+100,level.getIntialLives());
 
 
     } //EOF draw
@@ -304,7 +330,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         c.drawText(str.toString(), levelX, levelY, paint);
     }
 
+    public void displayLives(Canvas c, int livesX, int livesY, int livesnum)
+    {
+        //DRAW lives
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(80);
+        paint.setStyle(Paint.Style.FILL);
+        String s = Integer.toString(livesnum);
+        StringBuilder str = new StringBuilder();
+        str.append("LIVES: " +s);
+        System.out.println(str.toString());
+        c.drawText(str.toString(), livesX, livesY, paint);
 
+    }
 
 
 
