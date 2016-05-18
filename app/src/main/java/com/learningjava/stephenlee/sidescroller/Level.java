@@ -27,7 +27,9 @@ public class Level {
     private List<Objects> coins;
     private Objects terrain;
     private boolean noLives = false;
-    private int numLives = 3;
+    private int numLives = 10;
+    private boolean booflag = false;
+    private boolean mushroomflag = false;
 
     public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo,List<Objects> _coins, Objects terrain)
     {
@@ -88,6 +90,8 @@ public class Level {
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
     public void setIntialLives(int _numLives){numLives = _numLives;}
+    public void setbooContainPlayer(boolean _booflag){ booflag= _booflag; }
+    public void setmushroomsContainPlayer(boolean _mushroomflag){ mushroomflag= _mushroomflag; }
 
     /***GET methods****/
     //public boolean getGameOver(){return GameOver;}
@@ -129,7 +133,7 @@ public class Level {
                 return true;
             }
         }
-        return false;
+        return mushroomflag;
     }
 
     public void mushroomCollided(int playerX, int playerY,int _fliped)
@@ -170,7 +174,7 @@ public class Level {
                 }
             }
         }
-        return false;
+        return booflag;
     }
     public Boolean coinCollided(int playerX, int playerY) {
         for (int cn = 0; cn < coins.size(); ++cn) {

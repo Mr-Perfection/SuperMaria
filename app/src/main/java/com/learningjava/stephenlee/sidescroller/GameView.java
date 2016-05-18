@@ -40,7 +40,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int scoreY = 0;
 
     //livies
-    private int lives = 3;
+    private int lives = 10;
 
 
 
@@ -181,6 +181,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     level = levels.get(levelCounter);
                     gameThread.sleep(2000);
                     Log.d(Name, "Current game level is: " + levelCounter);
+                    level.setIntialLives(lives = 10);
+                    level.setbooContainPlayer(false);
+                    level.setmushroomsContainPlayer(false);
                 }
 
 
