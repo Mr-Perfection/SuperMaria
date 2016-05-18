@@ -18,6 +18,7 @@ public class Maps {
     Bitmap bgImage;
     int xi, xf, yi,yf;  //these variables are to determine the beginning and the end of the game.
     int WIDTH, HEIGHT;  //Width and Height of the background
+    Boolean GameOver;
     public Maps(Bitmap backgroundImage, int bgWidth, int bgHeight )
     {
 
@@ -38,9 +39,11 @@ public class Maps {
     }
     public int getbgYf(){return yf;}
 
+    public void gameOver(boolean isOver) {GameOver = isOver;}
+
     public void draw(Canvas c)
     {
-        bgRect.set(xi,yi,xf,yf);
+        bgRect.set(xi, yi, xf, yf);
         c.drawBitmap(bgImage,null,bgRect,null);
     }
 
