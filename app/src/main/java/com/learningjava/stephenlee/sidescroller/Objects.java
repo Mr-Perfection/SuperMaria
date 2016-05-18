@@ -11,6 +11,7 @@ import android.graphics.Rect;
 
 public class Objects {
     //instance of objects
+    public int fliped = 1; /** -1 to flip**/
     public int xi, xf;
     public int yi, yf;
     private Rect dst;
@@ -46,9 +47,9 @@ public class Objects {
      * @param: move integer is the magnitude of the movement in x axis.
      * Purpose: this will make the objects move the left***/
     public void setMoveX(int move) {
-        this.xi -= move;
-        this.xf -= move;
-        this.centerX -= move;
+        this.xi -= move*fliped;
+        this.xf -= move*fliped;
+        this.centerX -= move*fliped;
         dst.set(xi,yi,xf,yf);
     }
     public void setMoveY(int move) {
@@ -57,8 +58,10 @@ public class Objects {
         this.centerY += move;
         dst.set(xi,yi,xf,yf);
     }
-    public int getX(){return xi;}
-    public int getY(){return yf;}
+    public int getLeftX(){return xi;}
+    public int getX(){return centerX;}
+    public int getY(){return centerY;}
+    public Rect getRect(){return dst;}
 
 
     /***

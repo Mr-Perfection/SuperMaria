@@ -39,8 +39,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int scoreX = 0;
     private int scoreY = 0;
 
-    //livies
-    private int lives = 3;
+
 
 
     public GameView(Context context)
@@ -114,42 +113,41 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void draw(Canvas c) {
 
-//        maps.draw(c);
-//        if(player.getX() > getWidth()*4/7)
         if(level.playerGetX() > getWidth()*4/7)
         {
-            level.setbgMove(-30);
+            level.setbgMove(30);
             xpos++;
             if(xpos>0)  //If and only if the traveled distance is positive
                 score++; //increments score
 //            Log.d(Name, "flagpole moved left!");
             level.setFlagpoleMove(30);
             level.setCoinMove(30);
+            level.setTerrainMove(30);
 
         }
-//        else if(player.getX() < getWidth() *2/7)
         else if(level.playerGetX() < getWidth() *2/7)
         {
-            level.setbgMove(30);
+            level.setbgMove(-30);
             xpos--; //going against the travel distance. Subtract xpos
             level.setFlagpoleMove(-30);
             level.setCoinMove(-30);
+            level.setTerrainMove(-38);
         }
 
+        /***Coin collision**/
         if(level.coinCollided(level.playerGetX(),level.playerGetY())){
             level.setdrawCoin(false);
             level.setnoCoin(true);
         }
 
-        //flag dectecting
-        if(level.flagPoleCollided(level.playerGetX(),level.playerGetY()))
+        /***Flag collision**/
+        if(level.flagPoleCollided(level.playerGetX(), level.playerGetY()))
         {
 
             Log.d(Name, "flagpole collided!");
             try {
                 ++levelCounter;
                 level = levels.get(levelCounter);
-
                 gameThread.sleep(2000);
                 Log.d(Name, "Current game level is: "+levelCounter);
 
@@ -164,36 +162,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         }
         //Set the mushroom movement
-        level.setMushroomMove(30);
+        level.setMushroomMove(38);
         //Check whether mushroom has been collided with player
-        if (level.mushroomCollided(level.playerGetX(), level.playerGetY()))
-        {
-//            player.setVisibility(false);
 
-//            gameThread.interrupt();
-            if(lives >= 1){
-                lives --;
-                System.out.println("what's the num of lives?" +lives);
-                level.setIntialLives(lives);
-                System.out.println("what's the getIntiallives?" +level.getIntialLives());}
-            if(level.getIntialLives() == 0){
-                gameThread.interrupt();
-            }
-        }
-        level.setBooMove(100);
-        if (level.booCollided(level.playerGetX(), level.playerGetY()))
+        /***If terrain collides with player****/
+//        Log.d(Name, "terrain collided "+level.terrainCollided(level.playerGetX(), level.playerGetY()));
+        if(level.terrainCollided(level.playerGetX(), level.playerGetY()))
         {
-//            gameThread.interrupt();
-            if(lives >= 1){
-                lives --;
-                System.out.println("what's the num of lives?" +lives);
-                level.setIntialLives(lives);
-                System.out.println("what's the getIntiallives?" +level.getIntialLives());
-            }
-            if(level.getIntialLives() == 0){
-                gameThread.interrupt();
-            }
+
+            Log.d(Name, "terrain collided ");
+            level.player.setY(getHeight() * 7/9 - 200);
         }
+        else
+            level.player.setY(getHeight() * 7/9);
+
+
+
+
+        /***If Terrain and mushroom collision happens then flip the mushroom**/
+        level.mushroomCollided(level.terrainGetX(), level.terrainGetY(),-1);
+
+        /***Mushroom and player collision**/
+        if (level.mushroomCollided(level.playerGetX(), level.playerGetY())) {gameThread.interrupt();}
+        level.setBooMove(100);
+        if (level.booCollided(level.playerGetX(), level.playerGetY())) {gameThread.interrupt();}
 
         /**Level drawn***/
         level.draw(c);
@@ -201,9 +193,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //        if(player.getVisibility())
         if(level.playerGetVisibility())
         {
-
             level.player.draw(c);
-//            player.gravity();
             level.playerGravity();
         } //EOF
 
@@ -212,9 +202,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         //Display the level
         displayLevel(c, getWidth()/2 - 50, 100, levelCounter+1);
-
-        //Display lives
-        displayLives(c,scoreX,scoreY+100,level.getIntialLives());
 
 
     } //EOF draw
@@ -245,16 +232,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Objects flagpole = new Objects(_flagpole, flagpole_left, flagpole_bot-_flagpole.getHeight(),flagpole_left + _flagpole.getWidth(), flagpole_bot);
 
 
+        //initialize terrain
+        Bitmap _terrain = BitmapFactory.decodeResource(getResources(), R.drawable.terrain);
+        int terrain_left = background.getWidth()*2/5;
+        int terrain_bot = getHeight()*4/5;
+        Objects terrain = new Objects(_terrain,terrain_left,terrain_bot - _terrain.getHeight(),terrain_left+_terrain.getWidth(),terrain_bot);
+
 //        //initialize mushroom, boo, coin and terrain
         List<Objects> mushrooms = new ArrayList<>();
         List<Objects> boos = new ArrayList<>();
         List<Objects> coins = new ArrayList<>();
 
+
         difficultiesLevel(level, background, mushrooms, boos,coins);
 
-        //initialize level
-//        level1 = new Level(flagpole,mushrooms,maps);
-        return new Level(player,flagpole,mushrooms,maps,boos,coins);
+
+        /**Return the level***/
+        return new Level(player,flagpole,mushrooms,maps,boos,coins,terrain);
     } //EOF initializeLevels
 
     /***difficultiesLevel
@@ -278,7 +272,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         //initialize boo
         Bitmap boobitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boo);
         int boo_left = background.getWidth()*3/5;
-        int boo_bot = getHeight()*2/5;
+        int boo_bot = getHeight()*3/5;
         for(int b = 0; b<level+1;++b){
             Objects boo = new Objects(boobitmap,boo_left + 300 * b,boo_bot-boobitmap.getHeight(),boo_left+boobitmap.getWidth() + 300 * b,boo_bot);
             boos.add(boo);
@@ -325,20 +319,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         c.drawText(str.toString(), levelX, levelY, paint);
     }
 
-    public void displayLives(Canvas c, int livesX, int livesY, int livesnum)
-    {
-        //DRAW lives
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(80);
-        paint.setStyle(Paint.Style.FILL);
-        String s = Integer.toString(livesnum);
-        StringBuilder str = new StringBuilder();
-        str.append("LIVES: " +s);
-        System.out.println(str.toString());
-        c.drawText(str.toString(), livesX, livesY, paint);
 
-    }
 
 
 

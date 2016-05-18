@@ -26,10 +26,9 @@ public class Level {
     private List<Objects> boos;
     private List<Objects> coins;
     private Objects terrain;
-    private boolean noLives = false;
-    private int numLives = 3;
 
-    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo,List<Objects> _coins)
+
+    public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo,List<Objects> _coins, Objects terrain)
     {
         flagpole = _flagpole;
         mushrooms = _mushroom;
@@ -37,16 +36,23 @@ public class Level {
         this.player = player;
         boos = _boo;
         coins = _coins;
+        this.terrain = terrain;
 
 
     }
     /**Set methods **/
     public void setbgMove(int delta){map.bgMovement(delta);}
+    public void setTerrainMove(int delta){terrain.setMoveX(delta);}
     public void setFlagpoleMove(int delta) {flagpole.setMoveX(delta);}
     public void setMushroomMove(int delta)
     {
         for(int i=0;i<mushrooms.size();++i)
+        {
+            if (mushrooms.get(i).getX() <= 0)
+                mushrooms.get(i).fliped = -mushrooms.get(i).fliped;
+
             mushrooms.get(i).setMoveX(delta);
+        }
     }
     public void setBooMove(int delta)
     {
@@ -59,6 +65,8 @@ public class Level {
                 boos.get(b).setMoveX(delta);
                 boos.get(b).setMoveY(delta);
             }
+            if (boos.get(b).getX() <= 0)
+                boos.get(b).fliped = -boos.get(b).fliped;
         }
     }
     public void setCoinMove(int delta){
@@ -78,12 +86,13 @@ public class Level {
     }
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
-    public void setIntialLives(int _numLives){numLives = _numLives;}
 
     /***GET methods****/
     //public boolean getGameOver(){return GameOver;}
     public int playerGetX() {return player.getX();}
     public int playerGetY() {return player.getY();}
+    public int terrainGetX() {return terrain.getX();}
+    public int terrainGetY() {return terrain.getY();}
     public Boolean playerGetVisibility() {return player.getVisibility();}
 
     public List<Objects> getMushrooms() {
@@ -106,20 +115,49 @@ public class Level {
         }
         return true;
     }
-    public int getIntialLives(){return numLives;}
-
-
     /***Check whether flag is collided with the player**/
     public Boolean flagPoleCollided(int playerX, int playerY) {return flagpole.collisionDetected(playerX,playerY);}
     public Boolean mushroomCollided(int playerX, int playerY)
     {
         for(int i=0;i<mushrooms.size();++i)
         {
-            if(mushrooms.get(i).getX() > 0) //check if x is still greater than 0
-                if(mushrooms.get(i).collisionDetected(playerX, playerY)) return true;
+            if (mushrooms.get(i).collisionDetected(playerX, playerY)) {
+                mushrooms.get(i).fliped = -mushrooms.get(i).fliped;
+                return true;
+            }
         }
         return false;
     }
+
+    public void mushroomCollided(int playerX, int playerY,int _fliped)
+    {
+        for(int i=0;i<mushrooms.size();++i)
+        {
+
+            if(mushrooms.get(i).collisionDetected(playerX, playerY)) {mushrooms.get(i).fliped = _fliped*mushrooms.get(i).fliped;;}
+        }
+
+    }
+
+    public Boolean terrainCollided(int playerX, int playerY)
+    {
+        if( terrainGetX() - terrain.getRect().width()/2 <= playerX && (terrainGetX()+terrain.getRect().width()) >= playerX)
+                return true;
+        return false;
+    }
+
+//    public Boolean terrainBlocked(int playerX, int playerY)
+//    {
+//        if(terrain.getLeftX() == player.getRightX())
+//        {
+//            if(player.jumped)
+//
+//        }
+//        else
+//            return true;
+//        return false;
+//    }
+
     public Boolean booCollided(int playerX, int playerY)
     {
         for(int b = 0; b< boos.size(); ++b) {
@@ -133,7 +171,7 @@ public class Level {
     }
     public Boolean coinCollided(int playerX, int playerY) {
         for (int cn = 0; cn < coins.size(); ++cn) {
-            if(coins.get(cn).collisionDetected(playerX, playerY)&&(coins.get(cn).getX() <= playerX || coins.get(cn).getX() >= playerX))
+            if(coins.get(cn).collisionDetected(playerX, playerY))
             {
                 coins.get(cn).setdrawObject(false);
                 coins.get(cn).setNoObjectflag(true);
@@ -146,28 +184,28 @@ public class Level {
     public void draw(Canvas c)
     {
 
-            map.draw(c);
-            for (int i = 0; i < mushrooms.size(); ++i) {
-                if (mushrooms.get(i).getX() > 0) {
-                    mushrooms.get(i).setdrawObject(true);
-                    mushrooms.get(i).drawObject(c);
-                }
-            }
-            for(int b = 0; b< boos.size(); ++b) {
-                if(boos.get(b).getX()>0 && boos.get(b).getY()>0) {
-                    boos.get(b).setdrawObject(true);
-                    boos.get(b).drawObject(c);
-                }
-            }
-        for(int cn = 0; cn < coins.size(); ++cn) {
-            if (!coins.get(cn).isNoObjectflag()) {
-
-                coins.get(cn).setdrawObject(true);
-                coins.get(cn).drawObject(c);
-            }
+        map.draw(c);
+        for (int i = 0; i < mushrooms.size(); ++i) {
+            mushrooms.get(i).setdrawObject(true);
+            mushrooms.get(i).drawObject(c);
         }
-            flagpole.setdrawObject(true);
-            flagpole.drawObject(c);
+        for (int b = 0; b < boos.size(); ++b) {
+
+            boos.get(b).setdrawObject(true);
+            boos.get(b).drawObject(c);
+
+        }
+        for (int cn = 0; cn < coins.size(); ++cn) {
+            coins.get(cn).setdrawObject(true);
+            coins.get(cn).drawObject(c);
+        }
+        flagpole.setdrawObject(true);
+        flagpole.drawObject(c);
+
+        terrain.setdrawObject(true);
+        terrain.drawObject(c);
+
+
 
     }
 

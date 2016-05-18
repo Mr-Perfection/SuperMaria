@@ -33,8 +33,8 @@ public class Maps {
     /**This will update the left and right positions of background rect.**/
     public void bgMovement(int delta)
     {
-        xi += delta;
-        xf += delta;
+        xi -= delta;
+        xf -= delta;
     }
     public int getbgYf(){return yf;}
 

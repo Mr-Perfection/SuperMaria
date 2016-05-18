@@ -22,11 +22,13 @@ public class Player {
     private Bitmap animatedBitmap; //the animated bitmap
 
     private int x;   // the X coordinate
-    private int y;   // the Y coordinate
+    private int rightX;
+    int y;   // the Y coordinate
     private int deltaX = 35;    //movement in magnitude for x coordinate
     private int deltaY = 210;    //movement in magnitude for x coordinate
     private boolean isFliped = false; //check if the bitmap is fliped or not.
     private boolean isVisible = true; //invisibility flag (when bullet hits the enemy, it becomes invisible)
+    private boolean isGravityEnabled = true;
     private boolean jumped = false; //check if jump is already executed or not.
     /*Set SpaceShooter (bitmap, x, y)*/
     public Player(Bitmap _bitmap,Bitmap _animtedBitmap, int _width, int _height)
@@ -37,7 +39,9 @@ public class Player {
         width = _width;
         height = _height * 7/9;
         x = _width / 2;
+        rightX = x+_bitmap.getWidth();
         y = height;
+
         body = new Rect(x,y,x+_bitmap.getWidth(), y+_bitmap.getHeight());
 
         touchGrid = new Rect(0,0,width,height);
@@ -45,11 +49,6 @@ public class Player {
     }
 
 
-    public void setVisibility(boolean _isVisible)
-    {
-        isVisible = _isVisible; //set it to false when hit by bullet
-
-    }
 
     public Boolean getVisibility()
     {
@@ -74,11 +73,8 @@ public class Player {
         return body;
     }
     //Get x axis
-    public int getX() {
-
-        return x;
-
-    }
+    public int getX() {return x;}
+    public int getRightX() {return rightX;}
 
 
     //Set x axis
@@ -94,11 +90,12 @@ public class Player {
 
     }
     //Set y axis
-    public void setY(int _y) {
-
-        y = _y;
-
-    }
+    public void setY(int _y) {y = _y;}
+    public void setGravity(boolean enabled){isGravityEnabled = enabled;}
+    public void setVisibility(boolean _isVisible) {isVisible = _isVisible;} //set it to false when hit by bullet
+    public void setDeltaX(int delta){deltaX = delta;}
+    public void setDeltaY(int delta){deltaY = delta;}
+    public void setJumped(boolean jumped){this.jumped = jumped;}
 //    //is touched
 //    public boolean isTouched(){
 //        return touched;
@@ -203,23 +200,27 @@ public class Player {
      * Gravity always pulls the player downward until it hits the certain coordinates**/
     public void gravity()
     {
-        if(jumped)
+        if(isGravityEnabled)
         {
-
-            while (y <= height)
+            if(jumped)
             {
 
-                y+=5;
+                while (y <= height)
+                {
 
-            }   //Check while y <= certain height because of the gravity.
+                    y+=5;
 
-            if(y >= height)
+                }   //Check while y <= certain height because of the gravity.
 
-            {
-                jumped = false;
-                bitmap = originalBitmap;
+                if(y >= height)
+
+                {
+                    jumped = false;
+                    bitmap = originalBitmap;
+                }
             }
         }
+
 
     }//EOF gravity
 
