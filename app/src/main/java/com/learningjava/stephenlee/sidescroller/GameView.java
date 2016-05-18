@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
+/***
  * Created by StephenLee on 5/4/16.
  */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
