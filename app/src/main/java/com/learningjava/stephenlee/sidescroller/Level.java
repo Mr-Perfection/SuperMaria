@@ -26,7 +26,8 @@ public class Level {
     private List<Objects> boos;
     private List<Objects> coins;
     private Objects terrain;
-
+    private boolean noLives = false;
+    private int numLives = 3;
 
     public Level(Player player,Objects _flagpole, List<Objects> _mushroom, Maps map,List<Objects> _boo,List<Objects> _coins, Objects terrain)
     {
@@ -86,6 +87,7 @@ public class Level {
     }
     public void playerGravity(){player.gravity();}
     public void playerUpdate(int eventX, int eventY){player.update(eventX, eventY);}
+    public void setIntialLives(int _numLives){numLives = _numLives;}
 
     /***GET methods****/
     //public boolean getGameOver(){return GameOver;}
@@ -115,6 +117,7 @@ public class Level {
         }
         return true;
     }
+    public int getIntialLives(){return numLives;}
     /***Check whether flag is collided with the player**/
     public Boolean flagPoleCollided(int playerX, int playerY) {return flagpole.collisionDetected(playerX,playerY);}
     public Boolean mushroomCollided(int playerX, int playerY)
@@ -171,7 +174,7 @@ public class Level {
     }
     public Boolean coinCollided(int playerX, int playerY) {
         for (int cn = 0; cn < coins.size(); ++cn) {
-            if(coins.get(cn).collisionDetected(playerX, playerY))
+            if(coins.get(cn).collisionDetected(playerX, playerY)&&(coins.get(cn).getX() <= playerX || coins.get(cn).getX() >= playerX))
             {
                 coins.get(cn).setdrawObject(false);
                 coins.get(cn).setNoObjectflag(true);
@@ -196,8 +199,10 @@ public class Level {
 
         }
         for (int cn = 0; cn < coins.size(); ++cn) {
-            coins.get(cn).setdrawObject(true);
-            coins.get(cn).drawObject(c);
+            if(!coins.get(cn).isNoObjectflag()) {
+                coins.get(cn).setdrawObject(true);
+                coins.get(cn).drawObject(c);
+            }
         }
         flagpole.setdrawObject(true);
         flagpole.drawObject(c);
