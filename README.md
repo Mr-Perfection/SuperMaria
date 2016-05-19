@@ -10,6 +10,6 @@ In order to gain points, the player has to avoid the enemies, which are mushroom
 
 
 
-There are total 3 lives for the player of each level. If the player used up all his/her lives, he/she will have to restart the game. However, after one level, the player will have 3 lives again.
+There are total 10 lives for the player of each level. If the player used up all his/her lives, he/she will have to restart the game. However, after one level, the player will have 10 lives again.
 
 Have fun!
